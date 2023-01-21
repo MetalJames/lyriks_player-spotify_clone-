@@ -7,11 +7,11 @@ import TopCharts from './TopCharts';
 import AroundYou from './AroundYou';
 
 export {
-  Discover,
-  Search,
-  TopArtists,
-  ArtistDetails,
-  SongDetails,
-  TopCharts,
-  AroundYou,
+    Discover,
+    Search,
+    TopArtists,
+    ArtistDetails,
+    SongDetails,
+    TopCharts,
+    AroundYou,
 };
