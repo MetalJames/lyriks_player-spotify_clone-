@@ -1,4 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
+// add useEffect and useRef as for mobile page load at the end instead of top
+import { useEffect, useRef } from 'react';
 
 import { Error, Loader, SongCard } from '../components';
 import { genres } from '../assets/constants';
@@ -9,6 +11,15 @@ const Discover = () => {
     const dispatch = useDispatch();
     const { activeSong, isPlaying, genreListId } = useSelector((state) => state.player);
     const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || 'POP');
+    // add divRef here
+    const divRef = useRef(null);
+
+    // add useEffect and set timer for 1 second to let load content and scroll page to top
+    useEffect(() => {
+        setTimeout(() => divRef.current.scrollIntoView({ behavior: 'smooth' }), 1000);
+    });
+
+    const topDiscover = data?.slice(0, 20);
 
     if (isFetching) return <Loader title='Loading Songs...' />;
     if (error) return <Error />;
@@ -16,7 +27,7 @@ const Discover = () => {
     const genreTitle = genres.find(({ value }) => value === genreListId)?.title;
 
     return (
-        <div className='flex flex-col'>
+        <div ref={divRef} className='flex flex-col'>
             <div className='w-full flex justify-between items-center sm:flex-row flex-col mt-4 mb-10'>
                 <h2 className='font-bold text-3xl text-white text-left'>Discover {genreTitle}</h2>
                 <select
@@ -29,7 +40,7 @@ const Discover = () => {
             </div>
 
             <div className='flex flex-wrap justify-center gap-8'>
-                {data?.map((song, i) => (
+                {topDiscover?.map((song, i) => (
                     <SongCard
                         key={song.key}
                         song={song}
@@ -38,7 +49,7 @@ const Discover = () => {
                         data={data}
                         i={i}
                     />
-                ))};
+                ))}
             </div>
         </div>
     );
