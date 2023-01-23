@@ -1,6 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
 // add useEffect and useRef as for mobile page load at the end instead of top
 import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Error, Loader, SongCard } from '../components';
 import { genres } from '../assets/constants';
@@ -11,6 +11,9 @@ const Discover = () => {
     const dispatch = useDispatch();
     const { activeSong, isPlaying, genreListId } = useSelector((state) => state.player);
     const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || 'POP');
+
+    const topDiscover = data?.slice(0, 20);
+
     // add divRef here
     const divRef = useRef(null);
 
@@ -18,8 +21,6 @@ const Discover = () => {
     useEffect(() => {
         setTimeout(() => divRef.current.scrollIntoView({ behavior: 'smooth' }), 1000);
     });
-
-    const topDiscover = data?.slice(0, 20);
 
     if (isFetching) return <Loader title='Loading Songs...' />;
     if (error) return <Error />;

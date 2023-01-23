@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// add useEffect and useRef as for mobile page load at the end instead of top
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -10,6 +11,14 @@ const AroundYou = () => {
     const [loading, setLoading] = useState(true);
     const { activeSong, isPlaying } = useSelector((state) => state.player);
     const { data, isFetching, error } = useGetSongsByCountryQuery(country);
+
+    // add divRef here
+    const divRef = useRef(null);
+
+    // add useEffect and set timer for 1 second to let load content and scroll page to top
+    useEffect(() => {
+        setTimeout(() => divRef.current.scrollIntoView({ behavior: 'smooth' }), 700);
+    });
 
     useEffect(() => {
         axios.get(`https://geo.ipify.org/api/v2/country?apiKey=${import.meta.env.VITE_GEO_API_KEY}`)
@@ -23,7 +32,7 @@ const AroundYou = () => {
     if (error && country) return <Error />;
 
     return (
-        <div className='flex flex-col'>
+        <div ref={divRef} className='flex flex-col'>
             <h2 className='font-bold text-3xl text-white text-left mt-4 mb-10'>Around You <span className='font-black'>{country}</span></h2>
             <div className='flex flex-wrap sm:justify-start justify-center gap-8'>
                 {data?.map((song, i) => (
